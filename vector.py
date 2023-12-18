@@ -1,4 +1,4 @@
-from CoordinatesTransform import draw_line, draw_text
+from pygame_draw_utils import draw_line, draw_text
 import numpy as np
 
 class Vector:

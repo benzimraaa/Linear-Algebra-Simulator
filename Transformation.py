@@ -17,7 +17,6 @@ class CustomArray(np.ndarray):
 
     def dot(self, other):
         other = np.array(other)
-        # Check if the dimensions are compatible for dot product
         if self.shape[0] == 3 and other.shape[0] == 2:
             other = np.array([other[0], other[1],1])
         return (super(CustomArray, self).dot(other)[:2]).real

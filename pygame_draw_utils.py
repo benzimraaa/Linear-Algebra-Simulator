@@ -54,6 +54,7 @@ def draw_line(screen, color, p1, p2,
 
     p1 = math_to_pixel([x1, y1], window_width=window_width, window_height=window_height, scale=scale)
     p2 = math_to_pixel([x2, y2], window_width=window_width, window_height=window_height, scale=scale)
+    
     if p1 is not None and p2 is not None:
         pygame.draw.line(screen, color, p1, p2, width)
 
