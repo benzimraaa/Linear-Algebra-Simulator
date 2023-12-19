@@ -1,6 +1,7 @@
 from functools import partial
 import pygame
 import sys
+from Star import Star
 from pygame_draw_utils import *
 from Grid import *
 from vector import *
@@ -37,12 +38,14 @@ vec1 = Vector(300, 100)
 vec2 = Vector(200, -350, start=vec1.end)
 vec2_o = Vector(200, -350)
 circle = Circle(100,(-50, 100))
+star = Star(5, 400, 100, (-500, 80))
 
 
 
 # trans_mat = Rotation(np.pi/2)
 # trans_mat = Scaling(-1.2, 1.1)
-trans_mat = Shear(-0.5, 0.5)*Scaling(0.6, 1.1)*Translation(-50, -100)
+trans_mat = Shear(-0.5, 0.5)*Scaling(-0.6, 1.1)
+# *Translation(-50, -100)
 # print("-"*20,'\n'*3)
 # print_colored_matrix(trans_mat.get_eigenvectors())
 # print("-"*20,'\n'*3)
@@ -58,13 +61,15 @@ trans_mat = Shear(-0.5, 0.5)*Scaling(0.6, 1.1)*Translation(-50, -100)
 # e_vec = Vector(eigen_vec[0], eigen_vec[1])
 
 objects = [origin, grid, 
-           vec_i, vec_j, vec1, vec2, vec2_o, circle,
+           vec_i, vec_j, vec1, vec2, vec2_o, circle,star,
             #  e_vec
              ]
 
 # Main game loop
 running = True
 i = 0
+fix = False
+show_trans_grid = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -72,6 +77,13 @@ while running:
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
                 i = 0
+                fix = True
+            if event.key == pygame.K_RIGHT:
+                i = 1
+            if event.key == pygame.K_UP:
+                fix = False
+            if event.key == pygame.K_DOWN:
+                show_trans_grid = not show_trans_grid
 
     # Clear the screen
     screen.fill(black)
@@ -88,8 +100,9 @@ while running:
 
     
     # draw axes
-    grid.draw(screen, width=1)
-    grid_fix.draw(screen, width=1)
+    grid_fix.draw(screen, width=2)
+    if show_trans_grid:
+        grid.draw(screen, width=1)
 
     
 
@@ -106,8 +119,10 @@ while running:
     vec_i.draw(screen, colors.green, width=3)
     vec_i.draw_fixed(screen, colors.green, width=1)
 
-    vec_j.draw(screen, colors.green, width=3)
-    vec_j.draw_fixed(screen, colors.green, width=1)
+    vec_j.draw(screen, colors.orange, width=3)
+    vec_j.draw_fixed(screen, colors.orange, width=1)
+
+    star.draw(screen, colors.pink, width=3)
     # circle.draw(screen, colors.green, width=1)
 
     # e_vec.draw(screen, colors.gold, width=5)
@@ -117,8 +132,9 @@ while running:
 
     # Update the display
     pygame.display.flip()
-    i += 0.005
-    i = min(i, 1)
+    if not fix:
+        i += 0.005
+        i = min(i, 1)
 
 # Quit Pygame
 pygame.quit()

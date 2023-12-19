@@ -2,6 +2,7 @@
 
 import numpy as np
 import scipy
+from Star import Star
 from vector import Vector
 from Grid import Grid
 from Circle import Circle
@@ -30,10 +31,10 @@ class Transformation:
 
     def __call__(self, vector, t):
         """Rotate a Vector object."""
-        if isinstance(vector, (Vector, Grid, Circle)):
+        if isinstance(vector, (Vector, Grid, Circle , Star)):
             vector.transform(self.get_transformation(t))
         else:
-            raise NotImplementedError("Rotation of {} is not implemented.".format(type(vector)))
+            raise NotImplementedError("Transformation of {} is not implemented.".format(type(vector)))
     
     def get_transformation(self, t):
         """M(t) = exp(t * ln(M))"""
