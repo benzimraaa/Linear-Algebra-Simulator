@@ -31,7 +31,7 @@ yellow=(255,255,0)
 
 
 origin = Circle(5)
-grid = Grid(2*width, 2*height, cell_length=100, color=blue)
+grid = Grid(8*width, 8*height, cell_length=100, color=blue)
 grid_fix = Grid(width, height, cell_length=100, color=colors.light_gray)
 vec_i = Vector(100, 0)
 vec_j = Vector(0, 100)
@@ -43,14 +43,14 @@ star = Star(5, 400, 100, (-500, 80))
 points = []
 # random circles (points)
 for i in range(20):
-    circle = Circle(5, (random.randint(-width/2, width/2), random.randint(-height/2, height/2)))
+    circle = Circle(random.randint(3,20), (random.randint(-width/2, width/2), random.randint(-height/2, height/2)))
     points.append(circle)
 
 
 # trans_mat = Rotation(np.pi/3)
 # trans_mat = Scaling(2, 1.5) * Rotation(np.pi/3)
-trans_mat = Transformation(np.array([[3,4],
-                                     [0,2]])/2)
+trans_mat = Transformation(np.array([[-3,4],
+                                     [1,2]])/2)
 # trans_mat = Shear(0.5, 0) * Scaling(2, 1)
 
 # *Translation(-50, -100)
@@ -82,6 +82,7 @@ running = True
 i = 0
 fix = False
 show_trans_grid = True
+stop = False
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -94,8 +95,28 @@ while running:
                 i = 1
             if event.key == pygame.K_UP:
                 fix = False
+                stop = False
             if event.key == pygame.K_DOWN:
                 show_trans_grid = not show_trans_grid
+            if event.key == pygame.K_PAGEUP:
+                trans_mat *= Rotation(-np.pi/9)
+            if event.key == pygame.K_PAGEDOWN:
+                trans_mat *= Rotation(np.pi/9)
+            if event.key == pygame.K_COMMA:
+                trans_mat = Translation(-100, 0)*trans_mat
+            if event.key == pygame.K_PERIOD:
+                trans_mat = Translation(100, 0)*trans_mat
+            if event.key == pygame.K_SPACE:
+                stop = not stop
+
+        if event.type == pygame.MOUSEWHEEL:
+            # if mouse scroll down scale up
+            if event.y < 0:
+                trans_mat *= Scaling(1.1, 1.1)
+            # if mouse scroll up scale down
+            if event.y > 0:
+                trans_mat *= Scaling(0.9, 0.9)
+            
 
     # Clear the screen
     screen.fill(black)
@@ -150,8 +171,8 @@ while running:
 
     # Update the display
     pygame.display.flip()
-    if not fix:
-        i += 0.005
+    if not fix and not stop:
+        i += 0.007
         i = min(i, 1)
 
 # Quit Pygame

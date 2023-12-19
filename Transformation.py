@@ -47,7 +47,10 @@ class Transformation:
     
     # *= operator overloading
     def __imul__(self, other):
-        self.matrix = self.matrix.dot(other.matrix)
+        if other.matrix.shape != self.matrix.shape:
+            self.matrix = Transformation(self.to3d().dot(other.to3d())).matrix
+        else:
+            self.matrix = self.matrix.dot(other.matrix)
         return self
     
     def to3d(self):
@@ -90,7 +93,7 @@ class Translation(Transformation):
         super().__init__(self.matrix)
 
 class Shear(Transformation):
-    def __init__(self, shx, shy):
+    def __init__(self, shx, shy=0):
         """Initialize the shear matrix 2D."""
         self.shx = shx
         self.shy = shy
