@@ -1,10 +1,11 @@
 from Circle import Circle
+from Transformation import Transformable
 from pygame_draw_utils import *
 import numpy as np
 import colors
 
 
-class Star:
+class Star(Transformable):
 
     def __init__(self, vertices, inner_radius, outer_radius, center=(0,0)):
         self.vertices = vertices
@@ -27,17 +28,16 @@ class Star:
         return points
 
 
-    def draw(self, screen, color, width=0):
+    def draw(self, screen, color, width=0, text=False):
         model = self.points_trans
         for i in range(len(model)):
             x,y = model[(i+1)%len(model)]
             draw_line(screen, color, model[i], (x, y), width=width)
-            if self.vertices < 4:
-                draw_text(screen, f'({x/100:.2f}, {y/100:.2f})', model[i], (x,y))
 
-        self.center_trans.draw(screen, color=colors.red,width=0)
-        x, y = self.center_trans.center_trans
-        draw_text(screen,  f'({x/100:.2f}, {y/100:.2f})', (x+20,y+20), (x+20,y+20))
+        if text:
+            self.center_trans.draw(screen, color=colors.red,width=0)
+            x, y = self.center_trans.center_trans
+            draw_text(screen,  f'({x/100:.2f}, {y/100:.2f})', (x+20,y+20), (x+20,y+20))
 
     
     def draw_fixed(self, screen, color, width=0):

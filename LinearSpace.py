@@ -10,6 +10,7 @@ from Circle import *
 import colors
 from Transformation import *
 from printer import *
+from ConicSection import *
 
 # Initialize Pygame
 pygame.init()
@@ -39,18 +40,22 @@ vec1 = Vector(300, 100)
 vec2 = Vector(200, -350, start=vec1.end)
 vec2_o = Vector(200, -350)
 circle = Circle(100,(-50, 100))
-star = Star(5, 400, 100, (-500, 80))
+star = Star(2, 100, 100, (-500, 80))
+hiperbola = ConicSection(1.3, 2, 3, 14, -2, 3, 2*width, 2*height ,n=200)
 points = []
 # random circles (points)
-for i in range(20):
-    circle = Circle(random.randint(3,20), (random.randint(-width/2, width/2), random.randint(-height/2, height/2)))
+for i in range(10):
+    r = random.randint(50,100)
+    v = 20 if i > 4 else 2
+    circle = Star(v, r, r, (random.randint(-width, width), random.randint(-height, height)))
+    # circle = Circle(random.randint(3,20), (random.randint(-width/2, width/2), random.randint(-height/2, height/2)))
     points.append(circle)
 
 
-# trans_mat = Rotation(np.pi/3)
+trans_mat = Rotation(np.pi/3)
 # trans_mat = Scaling(2, 1.5) * Rotation(np.pi/3)
-trans_mat = Transformation(np.array([[-3,4],
-                                     [1,2]])/2)
+# trans_mat = Transformation(np.array([[1,0],
+                                    #  [0,1]]))
 # trans_mat = Shear(0.5, 0) * Scaling(2, 1)
 
 # *Translation(-50, -100)
@@ -59,22 +64,22 @@ print("-"*20,'\n'*3)
 print_colored_matrix(trans_mat.get_eigenvectors())
 print("-"*20,'\n'*3)
 
-eigen_vec_1 = trans_mat.get_eigenvectors()[:,0]
-eigen_vec_2 = trans_mat.get_eigenvectors()[:,1]
+eigen_vec_1 = trans_mat.get_eigenvectors()[:,0].real
+eigen_vec_2 = trans_mat.get_eigenvectors()[:,1].real
 
 # print(eigen_vec_1)
 
 assert np.linalg.norm(eigen_vec_1) != 0
 
-eigen_vec_1 = eigen_vec_1 / np.linalg.norm(eigen_vec_1) * 150
-eigen_vec_2 = eigen_vec_2 / np.linalg.norm(eigen_vec_2) * 150
+eigen_vec_1 = eigen_vec_1 / np.linalg.norm(eigen_vec_1) * 100
+eigen_vec_2 = eigen_vec_2 / np.linalg.norm(eigen_vec_2) * 100
 
 e_vec_1 = Vector(eigen_vec_1[0], eigen_vec_1[1])
 e_vec_2 = Vector(eigen_vec_2[0], eigen_vec_2[1])
 
 objects = [origin, grid, 
            vec_i, vec_j, vec1, vec2, vec2_o, circle,star,
-             e_vec_1, e_vec_2
+             e_vec_1, e_vec_2, hiperbola
              ]+points
 
 # Main game loop
@@ -141,11 +146,11 @@ while running:
 
 
     # draw vector
-    vec1.draw(screen, yellow, width=2)
-    vec1.draw(screen, yellow, width=1)
+    # vec1.draw(screen, yellow, width=2)
+    # vec1.draw(screen, yellow, width=1)
     
-    vec2.draw(screen, colors.cyan, width=2)
-    vec2.draw(screen, colors.cyan, width=1)
+    # vec2.draw(screen, colors.cyan, width=2)
+    # vec2.draw(screen, colors.cyan, width=1)
 
     vec2_o.draw(screen, colors.coral, width=2)
 
@@ -155,7 +160,7 @@ while running:
     vec_j.draw(screen, colors.orange, width=3)
     vec_j.draw_fixed(screen, colors.orange, width=1)
 
-    star.draw(screen, colors.pink, width=3)
+    star.draw(screen, colors.pink, width=3, text=True)
     # circle.draw(screen, colors.green, width=1)
 
     e_vec_1.draw(screen, colors.red, width=5)
@@ -164,10 +169,12 @@ while running:
     e_vec_2.draw(screen, colors.magenta, width=5)
     e_vec_2.draw_fixed(screen, colors.magenta, width=1)
 
-    for point in points:
-        point.draw(screen, colors.green, width=1)
+    # for point in points:
+    #     point.draw(screen, colors.green, width=1)
 
-    # (vec1 + vec2_o).draw(screen, colors.green, width=2)
+    hiperbola.draw(screen, colors.green, width=1)
+
+    
 
     # Update the display
     pygame.display.flip()

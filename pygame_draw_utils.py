@@ -12,6 +12,15 @@ def math_to_pixel(vec, scale=1, window_width=WIDTH, window_height=HEIGHT):
     vec[1] = window_height / 2 - scale * vec[1]
     return vec
 
+def pixel_to_math(vec, scale=1, window_width=WIDTH, window_height=HEIGHT):
+    """Converts a coordinate from pixel coordinates to math coordinates."""
+    if isinstance(vec, tuple):
+        vec = list(vec)            
+    vec = vec.copy()
+    vec[0] = (vec[0] - window_width / 2) / scale
+    vec[1] = (window_height / 2 - vec[1]) / scale
+    return vec
+
 
 def draw_line(screen, color, p1, p2, 
               xmin = -WIDTH/2, xmax = WIDTH/2,
@@ -71,3 +80,13 @@ def draw_text(screen, text, start_pos, end_pos):
     # Draw the text on the line
     text_surface = font.render(text, True, (255, 255, 255))
     screen.blit(text_surface, (text_x, text_y))
+
+def draw_conic(screen, A, B, C, F, G, H, color=(255, 0, 0)):
+    """Ax^2 + Bxy + Cy^2 + Fx + Gy + H = 0"""
+    for px in range(WIDTH):
+        for py in range(HEIGHT):
+            x, y = pixel_to_math([px, py])
+            x, y = x / 100, y / 100
+            equation_result = A * x**2 + B * x * y + C * y**2 + F * x + G * y + H
+            if abs(equation_result) < .2:
+                screen.set_at((px, py), color)  # Set pixel color to white

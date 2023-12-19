@@ -1,7 +1,8 @@
+from Transformation import Transformable
 from pygame_draw_utils import draw_line, draw_text
 import numpy as np
 
-class Vector:
+class Vector(Transformable):
 
     def __init__(self, x, y, start=(0,0)):
         self.x = x + start[0]

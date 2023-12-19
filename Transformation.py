@@ -2,10 +2,13 @@
 
 import numpy as np
 import scipy
-from Star import Star
-from vector import Vector
-from Grid import Grid
-from Circle import Circle
+
+
+
+class Transformable:
+    def transform(self, transformation):
+        # Common transformation logic or leave it as a placeholder
+        pass
 
 class CustomArray(np.ndarray):
     def __new__(cls, input_array):
@@ -31,7 +34,7 @@ class Transformation:
 
     def __call__(self, vector, t):
         """Rotate a Vector object."""
-        if isinstance(vector, (Vector, Grid, Circle , Star)):
+        if isinstance(vector, (Transformable)):
             vector.transform(self.get_transformation(t))
         else:
             raise NotImplementedError("Transformation of {} is not implemented.".format(type(vector)))
@@ -47,10 +50,7 @@ class Transformation:
     
     # *= operator overloading
     def __imul__(self, other):
-        if other.matrix.shape != self.matrix.shape:
-            self.matrix = Transformation(self.to3d().dot(other.to3d())).matrix
-        else:
-            self.matrix = self.matrix.dot(other.matrix)
+        self.matrix = (self * other).matrix
         return self
     
     def to3d(self):

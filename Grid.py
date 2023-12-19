@@ -1,7 +1,8 @@
 import numpy as np
+from Transformation import Transformable
 from pygame_draw_utils import *
 
-class Grid:
+class Grid(Transformable):
     def __init__(self, width, height, cell_length=10, color=(255, 255, 255)) -> None:
         self.width = width
         self.height = height

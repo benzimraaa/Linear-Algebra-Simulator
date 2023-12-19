@@ -1,7 +1,8 @@
+from Transformation import Transformable
 from pygame_draw_utils import *
 
 
-class Circle:
+class Circle(Transformable):
 
     def __init__(self, radius, center=(0,0)):
         self.radius = radius
