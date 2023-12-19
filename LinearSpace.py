@@ -1,4 +1,5 @@
 from functools import partial
+import random
 import pygame
 import sys
 from Star import Star
@@ -39,31 +40,42 @@ vec2 = Vector(200, -350, start=vec1.end)
 vec2_o = Vector(200, -350)
 circle = Circle(100,(-50, 100))
 star = Star(5, 400, 100, (-500, 80))
+points = []
+# random circles (points)
+for i in range(20):
+    circle = Circle(5, (random.randint(-width/2, width/2), random.randint(-height/2, height/2)))
+    points.append(circle)
 
 
+# trans_mat = Rotation(np.pi/3)
+# trans_mat = Scaling(2, 1.5) * Rotation(np.pi/3)
+trans_mat = Transformation(np.array([[3,4],
+                                     [0,2]])/2)
+# trans_mat = Shear(0.5, 0) * Scaling(2, 1)
 
-# trans_mat = Rotation(np.pi/2)
-# trans_mat = Scaling(-1.2, 1.1)
-trans_mat = Shear(-0.5, 0.5)*Scaling(-0.6, 1.1)
 # *Translation(-50, -100)
-# print("-"*20,'\n'*3)
-# print_colored_matrix(trans_mat.get_eigenvectors())
-# print("-"*20,'\n'*3)
+print()
+print("-"*20,'\n'*3)
+print_colored_matrix(trans_mat.get_eigenvectors())
+print("-"*20,'\n'*3)
 
-# eigen_vec = trans_mat.get_eigenvectors()[0].real
+eigen_vec_1 = trans_mat.get_eigenvectors()[:,0]
+eigen_vec_2 = trans_mat.get_eigenvectors()[:,1]
 
-# print(eigen_vec)
+# print(eigen_vec_1)
 
-# assert np.linalg.norm(eigen_vec) != 0
+assert np.linalg.norm(eigen_vec_1) != 0
 
-# eigen_vec = eigen_vec / np.linalg.norm(eigen_vec) * 150
+eigen_vec_1 = eigen_vec_1 / np.linalg.norm(eigen_vec_1) * 150
+eigen_vec_2 = eigen_vec_2 / np.linalg.norm(eigen_vec_2) * 150
 
-# e_vec = Vector(eigen_vec[0], eigen_vec[1])
+e_vec_1 = Vector(eigen_vec_1[0], eigen_vec_1[1])
+e_vec_2 = Vector(eigen_vec_2[0], eigen_vec_2[1])
 
 objects = [origin, grid, 
            vec_i, vec_j, vec1, vec2, vec2_o, circle,star,
-            #  e_vec
-             ]
+             e_vec_1, e_vec_2
+             ]+points
 
 # Main game loop
 running = True
@@ -125,8 +137,14 @@ while running:
     star.draw(screen, colors.pink, width=3)
     # circle.draw(screen, colors.green, width=1)
 
-    # e_vec.draw(screen, colors.gold, width=5)
-    # e_vec.draw_fixed(screen, colors.gold, width=1)
+    e_vec_1.draw(screen, colors.red, width=5)
+    e_vec_1.draw_fixed(screen, colors.red, width=1)
+
+    e_vec_2.draw(screen, colors.magenta, width=5)
+    e_vec_2.draw_fixed(screen, colors.magenta, width=1)
+
+    for point in points:
+        point.draw(screen, colors.green, width=1)
 
     # (vec1 + vec2_o).draw(screen, colors.green, width=2)
 

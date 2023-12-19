@@ -33,6 +33,7 @@ grid = Grid(width, height, cell_length=100, color=blue)
 vec1 = Vector(300, 100)
 vec2 = Vector(200, -350, start=vec1.end)
 vec2_o = Vector(200, -350)
+star = Star(5, 300, 100, (-500, 80))
 
 # Main game loop
 running = True
@@ -52,6 +53,7 @@ while running:
     vec2.draw(screen, colors.cyan, width=2)
     vec2_o.draw(screen, colors.coral, width=2)
     (vec1 + vec2_o).draw(screen, colors.green, width=2)
+    star.draw(screen, colors.red, width=2)
 
     # Update the display
     pygame.display.flip()

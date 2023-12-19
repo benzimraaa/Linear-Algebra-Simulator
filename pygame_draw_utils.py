@@ -6,12 +6,7 @@ from config import *
 def math_to_pixel(vec, scale=1, window_width=WIDTH, window_height=HEIGHT):
     """Converts a coordinate from math coordinates to pixel coordinates."""
     if isinstance(vec, tuple):
-        vec = list(vec)
-        if len(vec) == 4:
-            vec[0] = scale * vec[0] + window_width / 2
-            vec[1] = window_height / 2 - scale * vec[1]
-            return tuple(vec)
-            
+        vec = list(vec)            
     vec = vec.copy()
     vec[0] = scale * vec[0] + window_width / 2
     vec[1] = window_height / 2 - scale * vec[1]
