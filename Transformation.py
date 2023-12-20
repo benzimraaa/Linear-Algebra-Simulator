@@ -23,16 +23,20 @@ class CustomArray(np.ndarray):
         other = np.array(other)
         if self.shape[0] == 3 and other.shape[0] == 2:
             other = np.array([other[0], other[1],1])
-        return (super(CustomArray, self).dot(other)[:2]).real
+            return (super(CustomArray, self).dot(other)[:2]).real
+        res = (super(CustomArray, self).dot(other))
+        if other.shape == (2,):
+            return res.real
+        return res
         
     
 
 
 class Transformation:
     def __init__(self, matrix):
-        self.matrix = matrix
+        self.matrix = CustomArray(matrix)
 
-    def __call__(self, vector, t):
+    def __call__(self, vector, t=1):
         """Rotate a Vector object."""
         if isinstance(vector, (Transformable)):
             vector.transform(self.get_transformation(t))

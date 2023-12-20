@@ -30,7 +30,19 @@ class Vector(Transformable):
 
         return (x1, y1), (x2, y2)
 
+    def set_arrow_head(self):
+        s, e = self.transform_points[:2]
+        v = np.array([e[0] - s[0], e[1] - s[1]])
+        c = v/15
+        vo = np.array([c[1], -c[0]])
+        k = np.linalg.norm(c) * np.tan(np.pi-.01) * vo
+        h1 = e - c + k
+        h2 = e - c - k
+        self.transform_points[2] = h1
+        self.transform_points[3] = h2
+
     def draw(self, screen, color, width=1):
+        self.set_arrow_head()
         p1, p2, p3, p4 = self.transform_points
         draw_line(screen, color, p1, p2, width=width)
         draw_text(screen, f'({p2[0]/100:.2f}, {p2[1]/100:.2f})', p1, p2)
@@ -50,3 +62,8 @@ class Vector(Transformable):
     
     def __add__(self, other):
         return Vector(self.x + other.x, self.y + other.y, start=self.start)
+    
+    def __mul__(self, other):
+        # scalar
+        if isinstance(other, (int, float)):
+            return Vector(self.dir[0] * other, self.dir[0] * other, start=self.start)
